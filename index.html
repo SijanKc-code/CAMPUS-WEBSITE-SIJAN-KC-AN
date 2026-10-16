@@ -1,0 +1,756 @@
+
+
+Campusflow single · HTML
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CampusFlow - Smart Student Productivity Hub">
+<title>Campus Websites | Smart Student Productivity Hub</title>
+<style>
+/* CampusFlow - style.css | Sijan KC, Section AN */
+:root{
+  --bg:#0b1226;--surface:#131c37;--surface2:#1b2648;--line:#27335c;
+  --text:#e8ecf8;--muted:#9aa6c9;--accent:#6366f1;--accent2:#38bdf8;
+  --ok:#34d399;--warn:#f59e0b;--bad:#f87171;--r:14px;
+}
+[data-theme="light"]{
+  --bg:#f4f6fb;--surface:#ffffff;--surface2:#eef1f9;--line:#dde2f0;
+  --text:#18203a;--muted:#5a6486;--accent:#4f46e5;--accent2:#0284c7;
+  --ok:#059669;--warn:#b45309;--bad:#dc2626;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
+h1{font-size:1.7rem;margin:.1rem 0}
+h2{font-size:1.05rem;margin:0 0 .6rem}
+h2.sp{margin-top:1.2rem}
+p{margin:.3rem 0}
+.muted{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;background:var(--accent);color:#fff;padding:8px;z-index:99}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+ 
+/* layout */
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh;transition:grid-template-columns .25s}
+.app.collapsed{grid-template-columns:72px minmax(0,1fr)}
+.app.collapsed .lbl{display:none}
+.sidebar{background:var(--surface);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;font-size:.9rem;flex:none}
+nav{display:flex;flex-direction:column;gap:4px;flex:1}
+nav button{display:flex;align-items:center;gap:12px;background:none;border:0;color:var(--muted);padding:11px 12px;border-radius:10px;cursor:pointer;font-size:.95rem;text-align:left;min-height:44px}
+nav button i{font-style:normal;width:20px;text-align:center}
+nav button:hover{background:var(--surface2);color:var(--text)}
+nav button.active{background:var(--accent);color:#fff}
+.profile{display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.profile small{display:block;color:var(--muted)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;flex:none}
+.content{min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:10px;padding:12px 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tagline{flex:1;color:var(--muted);font-size:.9rem;text-align:center}
+.icon-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--text);cursor:pointer;font-size:1.1rem}
+#menuBtn{display:none}
+main{padding:24px;max-width:1200px;width:100%;margin:0 auto;flex:1}
+main:focus{outline:none}
+.view{display:none}.view.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.scrim{display:none}
+ 
+/* components */
+.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px;padding:20px;border-radius:var(--r);background:linear-gradient(120deg,var(--surface2),var(--surface));border:1px solid var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.stat span{display:block;font-size:1.8rem;font-weight:700;color:var(--accent2)}
+.stat.warn span{color:var(--bad)}
+.stat small{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row.end{justify-content:flex-end;margin-top:12px}.row.center{justify-content:center}
+.grow{flex:1;min-width:120px}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--text);cursor:pointer;font-size:.92rem;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.small{min-height:36px;padding:0 12px}
+.btn[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;min-height:44px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+.err{color:var(--bad);min-height:1.2em;font-size:.88rem}
+.toolbar{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:10px;margin-bottom:14px}
+.banner{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;margin-bottom:14px;border-radius:var(--r);border:1px dashed var(--warn);color:var(--warn)}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.item{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px;background:var(--surface);display:flex;flex-direction:column;gap:6px;min-width:0;overflow-wrap:anywhere}
+.item.done{opacity:.65;border-left-color:var(--ok)}
+.item.done .ttl{text-decoration:line-through}
+.item.over{border-left-color:var(--bad)}
+.item .ttl{font-weight:600}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:.75rem;padding:2px 9px;border-radius:99px;background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+.badge.High{color:var(--bad)}.badge.Medium{color:var(--warn)}.badge.Low{color:var(--ok)}
+.badge.od{background:var(--bad);color:#fff;border-color:var(--bad)}
+.badge.sm{border-style:dashed}
+.empty{text-align:center;color:var(--muted);padding:22px;border:1px dashed var(--line);border-radius:12px}
+.meter{height:10px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.meter div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s}
+.chart{display:flex;gap:8px;align-items:flex-end;margin:14px 0 6px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.72rem;color:var(--muted);min-width:0}
+.btrack{height:120px;width:100%;display:flex;align-items:flex-end;background:var(--surface2);border-radius:8px;overflow:hidden}
+.bar{width:100%;background:linear-gradient(0deg,var(--accent),var(--accent2));min-height:2px;transition:height .4s}
+.hrow{display:grid;grid-template-columns:minmax(70px,120px) 1fr 40px;gap:8px;align-items:center;margin:8px 0;font-size:.85rem}
+.htrack{height:12px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.htrack div{height:100%;background:var(--accent);transition:width .4s}
+.htrack .ok{background:var(--ok)}
+ 
+/* focus room */
+.focus{text-align:center}
+.modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.ring{position:relative;width:min(280px,80vw);aspect-ratio:1;margin:0 auto 18px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10}
+.trk{stroke:var(--surface2)}
+.prg{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:565.49;stroke-dashoffset:0;transition:stroke-dashoffset .3s linear}
+.clock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.clock span{font-size:clamp(2.4rem,12vw,3.6rem);font-weight:700;font-variant-numeric:tabular-nums}
+.clock small{color:var(--muted)}
+.center-t{margin-top:14px}
+ 
+/* dialogs, toast, footer */
+dialog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--text);width:min(520px,calc(100vw - 24px));max-height:92vh;padding:20px;overflow:auto}
+dialog::backdrop{background:rgba(5,8,20,.65)}
+#toasts{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px;z-index:100;max-width:calc(100vw - 28px)}
+.toast{background:var(--accent);color:#fff;padding:11px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.3);animation:fade .2s}
+.foot{text-align:center;color:var(--muted);font-size:.85rem;padding:24px 0 8px}
+ 
+/* responsive */
+@media (max-width:820px){
+  .app,.app.collapsed{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:fixed;left:0;top:0;z-index:60;width:260px;transform:translateX(-100%);transition:transform .25s}
+  .app.collapsed .lbl{display:inline}
+  .app.menu-open .sidebar{transform:none}
+  .app.menu-open .scrim{display:block;position:fixed;inset:0;background:rgba(5,8,20,.55);z-index:50}
+  #menuBtn{display:block}.desk{display:none}
+  .tagline{display:none}.topbar{justify-content:space-between;padding:10px 14px}
+  main{padding:14px}
+  .toolbar{grid-template-columns:1fr 1fr}.toolbar #q{grid-column:1/-1}
+}
+@media (max-width:400px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}h1{font-size:1.4rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+ 
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="app" id="app">
+ 
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="brand"><span class="logo" aria-hidden="true">CF</span><span class="lbl">CampusFlow</span></div>
+  <nav id="nav">
+    <button data-view="dashboard" class="active" aria-current="page"><i aria-hidden="true">&#9638;</i><span class="lbl">Overview</span></button>
+    <button data-view="assignments"><i aria-hidden="true">&#9776;</i><span class="lbl">My Assignments</span></button>
+    <button data-view="planner"><i aria-hidden="true">&#9719;</i><span class="lbl">Study Planner</span></button>
+    <button data-view="focus"><i aria-hidden="true">&#9680;</i><span class="lbl">Focus Room</span></button>
+    <button data-view="analytics"><i aria-hidden="true">&#9636;</i><span class="lbl">Analytics</span></button>
+    <button data-view="settings"><i aria-hidden="true">&#9881;</i><span class="lbl">Settings</span></button>
+    <button data-view="about"><i aria-hidden="true">&#9432;</i><span class="lbl">About Project</span></button>
+  </nav>
+  <div class="profile"><span class="avatar" aria-hidden="true">SK</span><span class="lbl"><strong>Sijan KC</strong><small>Section AN</small></span></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+ 
+<div class="content">
+<header class="topbar">
+  <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+  <button class="icon-btn desk" id="collapseBtn" aria-label="Collapse sidebar">&#8596;</button>
+  <span class="tagline">Plan Better. Focus Deeper. Achieve More.</span>
+  <button class="icon-btn" id="themeBtn" aria-label="Switch theme">&#9680;</button>
+</header>
+ 
+<main id="main" tabindex="-1">
+ 
+<!-- OVERVIEW -->
+<section class="view active" id="view-dashboard" aria-labelledby="h-dash">
+  <div class="hero">
+    <div>
+      <p class="muted" id="today"></p>
+      <h1 id="h-dash">Welcome</h1>
+      <p id="motto" class="muted"></p>
+    </div>
+    <button class="btn primary" data-quick="assignment">+ New assignment</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><span id="sTotal">0</span><small>Total assignments</small></div>
+    <div class="stat"><span id="sPending">0</span><small>Pending</small></div>
+    <div class="stat"><span id="sDone">0</span><small>Completed</small></div>
+    <div class="stat warn"><span id="sOver">0</span><small>Overdue</small></div>
+    <div class="stat"><span id="sFocus">0m</span><small>Total focus time</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h2>Weekly focus</h2>
+      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="weekMeter"><div id="weekFill"></div></div>
+      <p class="muted" id="weekText"></p>
+      <div class="chart" id="weekChart"></div>
+      <p class="muted" id="weekSummary"></p>
+    </div>
+    <div class="card">
+      <h2>Upcoming deadlines</h2>
+      <ul class="list" id="upList"></ul>
+      <h2 class="sp">Quick actions</h2>
+      <div class="row">
+        <button class="btn" data-go="planner">Plan a session</button>
+        <button class="btn" data-go="focus">Start focus</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Recent activity</h2>
+    <ul class="list" id="actList"></ul>
+  </div>
+</section>
+ 
+<!-- ASSIGNMENTS -->
+<section class="view" id="view-assignments" aria-labelledby="h-as">
+  <div class="hero"><div><h1 id="h-as">My Assignments</h1><p class="muted">Add, edit, search and track every deadline.</p></div>
+    <button class="btn primary" data-quick="assignment">+ Add assignment</button></div>
+  <div class="banner" id="sampleBanner" hidden>
+    <span>Sample tasks are shown so you can explore the app.</span>
+    <button class="btn small" id="rmSample">Remove sample tasks</button>
+  </div>
+  <div class="toolbar">
+    <label class="sr" for="q">Search</label>
+    <input id="q" type="search" placeholder="Search title or subject">
+    <label class="sr" for="fStatus">Status</label>
+    <select id="fStatus"><option value="all">All status</option><option>Pending</option><option>Completed</option><option value="Overdue">Overdue</option></select>
+    <label class="sr" for="fPri">Priority</label>
+    <select id="fPri"><option value="all">All priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+    <label class="sr" for="fSort">Sort</label>
+    <select id="fSort"><option value="asc">Due date: earliest</option><option value="desc">Due date: latest</option></select>
+  </div>
+  <ul class="list" id="asList"></ul>
+</section>
+ 
+<!-- PLANNER -->
+<section class="view" id="view-planner" aria-labelledby="h-pl">
+  <div class="hero"><div><h1 id="h-pl">Study Planner</h1><p class="muted">Schedule focused study sessions.</p></div></div>
+  <div class="grid2">
+    <form class="card" id="plForm" novalidate>
+      <h2 id="plTitle">Add study plan</h2>
+      <input type="hidden" id="plId">
+      <label for="plSub">Subject</label>
+      <select id="plSub"><option>C Programming</option><option>Digital Electronics</option><option>Data Structures</option><option>Engineering Mathematics</option><option>English Communication</option><option>Other</option></select>
+      <label for="plDate">Date</label><input type="date" id="plDate">
+      <div class="row">
+        <div class="grow"><label for="plTime">Start time</label><input type="time" id="plTime"></div>
+        <div class="grow"><label for="plDur">Duration (min)</label><input type="number" id="plDur" min="5" max="480" value="45"></div>
+      </div>
+      <label for="plGoal">Study goal</label><input id="plGoal" maxlength="100" placeholder="e.g. Finish pointers practice">
+      <p class="err" id="plErr" role="alert"></p>
+      <div class="row"><button class="btn primary" type="submit" id="plSave">Add plan</button><button class="btn" type="button" id="plCancel" hidden>Cancel edit</button></div>
+    </form>
+    <div>
+      <div class="card"><h2>Today's agenda</h2><ul class="list" id="plToday"></ul></div>
+      <div class="card"><h2>Other plans</h2><ul class="list" id="plOther"></ul></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOCUS -->
+<section class="view" id="view-focus" aria-labelledby="h-fo">
+  <div class="hero"><div><h1 id="h-fo">Focus Room</h1><p class="muted">Pomodoro timer. Sessions count only when the countdown finishes.</p></div></div>
+  <div class="card focus">
+    <div class="modes" role="group" aria-label="Timer mode">
+      <button class="btn" data-mode="focus">Focus 25</button>
+      <button class="btn" data-mode="short">Short break 5</button>
+      <button class="btn" data-mode="long">Long break 15</button>
+    </div>
+    <div class="ring">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="trk" cx="100" cy="100" r="90"/><circle class="prg" id="ringP" cx="100" cy="100" r="90"/></svg>
+      <div class="clock"><span id="time" role="timer" aria-live="off">25:00</span><small id="modeName">Focus</small></div>
+    </div>
+    <div class="row center">
+      <button class="btn primary" id="tStart">Start</button>
+      <button class="btn primary" id="tResume" hidden>Resume</button>
+      <button class="btn" id="tPause" hidden>Pause</button>
+      <button class="btn" id="tReset">Reset</button>
+    </div>
+    <p class="muted center-t" id="focusStats"></p>
+  </div>
+</section>
+ 
+<!-- ANALYTICS -->
+<section class="view" id="view-analytics" aria-labelledby="h-an">
+  <div class="hero"><div><h1 id="h-an">Analytics</h1><p class="muted" id="anMsg"></p></div></div>
+  <div class="stats">
+    <div class="stat"><span id="aPct">0%</span><small>Assignments completed</small></div>
+    <div class="stat"><span id="aSess">0</span><small>Focus sessions</small></div>
+    <div class="stat"><span id="aTime">0m</span><small>Total study time</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Pending vs completed</h2><div id="pcChart"></div><p class="muted" id="pcText"></p></div>
+    <div class="card"><h2>Assignments by subject</h2><div id="subChart"></div><p class="muted" id="subText"></p></div>
+  </div>
+  <div class="card"><h2>Study activity, last 7 days</h2><div class="chart" id="anChart"></div><p class="muted" id="anText"></p></div>
+</section>
+ 
+<!-- SETTINGS -->
+<section class="view" id="view-settings" aria-labelledby="h-se">
+  <div class="hero"><div><h1 id="h-se">Settings</h1></div></div>
+  <div class="card"><h2>Appearance</h2><p class="muted">Your theme is saved in this browser.</p><button class="btn" id="themeBtn2">Toggle dark / light</button></div>
+  <div class="card"><h2>Data</h2>
+    <p class="muted">All data lives in your browser's localStorage. Nothing is sent to a server, and it does not sync between devices.</p>
+    <div class="row"><button class="btn" id="clrDemo">Clear sample tasks</button><button class="btn danger" id="resetAll">Reset all data</button></div></div>
+  <div class="card"><h2>Project</h2><p>CampusFlow, by Sijan KC (Section AN). Student project version 1.0.</p></div>
+</section>
+ 
+<!-- ABOUT -->
+<section class="view" id="view-about" aria-labelledby="h-ab">
+  <div class="hero"><div><h1 id="h-ab">About CampusFlow</h1><p class="muted">Smart Student Productivity Hub</p></div></div>
+  <div class="card">
+    <p><strong>Developer:</strong> Sijan KC &nbsp; <strong>Section:</strong> AN</p>
+    <p><strong>Course:</strong> BTech Computer Science and Engineering, GLA University, Mathura</p>
+    <p><strong>Stack:</strong> HTML5, CSS3, Vanilla JavaScript, browser localStorage</p>
+    <h2 class="sp">Objectives</h2>
+    <p>Help students organise assignments, plan study time, focus with a Pomodoro timer and see their progress.</p>
+    <h2 class="sp">Target users</h2>
+    <p>College students, especially first-year engineering and CS students.</p>
+    <h2 class="sp">Key features</h2>
+    <p>Assignment manager, study planner, focus timer, analytics, light/dark theme, responsive layout.</p>
+    <h2 class="sp">Learning outcomes</h2>
+    <p>DOM manipulation, events, forms and validation, localStorage, responsive CSS and accessibility.</p>
+    <p class="muted sp">The app runs locally in the browser and can be hosted as a static website. Data is stored in the current browser and is not synchronised across devices.</p>
+  </div>
+</section>
+ 
+<footer class="foot">Designed and developed by Sijan KC | BTech CSE | Section AN</footer>
+</main>
+</div>
+</div>
+ 
+<!-- Assignment dialog -->
+<dialog id="aDlg" aria-labelledby="aDlgT">
+  <form id="aForm" novalidate>
+    <h2 id="aDlgT">Add assignment</h2>
+    <input type="hidden" id="aId">
+    <label for="aTitle">Title *</label><input id="aTitle" maxlength="80">
+    <label for="aSub">Subject</label><input id="aSub" maxlength="40" placeholder="e.g. C Programming">
+    <label for="aDesc">Description</label><textarea id="aDesc" rows="3" maxlength="300"></textarea>
+    <div class="row">
+      <div class="grow"><label for="aDue">Due date *</label><input type="date" id="aDue"></div>
+      <div class="grow"><label for="aPri">Priority</label><select id="aPri"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+    </div>
+    <p class="err" id="aErr" role="alert"></p>
+    <div class="row end"><button type="button" class="btn" id="aCancel">Cancel</button><button class="btn primary" type="submit">Save assignment</button></div>
+  </form>
+</dialog>
+ 
+<!-- Confirm dialog -->
+<dialog id="cDlg" aria-labelledby="cMsg">
+  <form method="dialog">
+    <p id="cMsg"></p>
+    <div class="row end"><button class="btn" value="cancel">Cancel</button><button class="btn danger" value="ok">Confirm</button></div>
+  </form>
+</dialog>
+ 
+<div id="toasts" aria-live="polite"></div>
+<script>
+/* CampusFlow - script.js | Sijan KC, Section AN
+   Sections: 1 helpers, 2 state, 3 render, 4 assignments, 5 planner, 6 timer, 7 settings/nav, 8 init */
+(function () {
+  'use strict';
+ 
+  /* ---------- 1. Helpers ---------- */
+  const KEY = 'campusflow_v1';
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const pad = (n) => String(n).padStart(2, '0');
+  const iso = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const today = () => iso(new Date());
+  const addDays = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
+  const validDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v + 'T00:00')) &&
+    +v.slice(0, 4) >= 2000 && +v.slice(0, 4) <= 2100;
+  const fmtDate = (v) => new Date(v + 'T00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const mins = (m) => (m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm');
+ 
+  // Safe element builder: user text always goes through textContent
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function btn(label, act, id) {
+    const b = el('button', 'btn small', label);
+    b.type = 'button'; b.dataset.act = act; b.dataset.id = id;
+    return b;
+  }
+  function empty(box, msg) { box.replaceChildren(); const li = el('li', 'empty', msg); box.append(li); }
+ 
+  let memory = null; // fallback if localStorage is unavailable
+  function load() {
+    try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : memory; }
+    catch (e) { return memory; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { memory = S; }
+  }
+ 
+  /* ---------- 2. State ---------- */
+  function seed() {
+    const mk = (title, subject, description, off, priority) => ({
+      id: uid(), title, subject, description, due: addDays(off), priority,
+      status: 'Pending', created: today(), sample: true
+    });
+    return [
+      mk('Complete C Programming assignment', 'C Programming', 'Arrays and pointers lab questions.', 2, 'High'),
+      mk('Revise Digital Electronics', 'Digital Electronics', 'Logic gates and Boolean algebra.', 4, 'Medium'),
+      mk('Practice DSA in C++', 'Data Structures', 'Linked list problems.', 6, 'Medium'),
+      mk('Prepare English Communication viva', 'English Communication', 'Practise a 2-minute self introduction.', 1, 'High'),
+      mk('Review Engineering Mathematics', 'Engineering Mathematics', 'Matrices practice sheet.', -1, 'Low')
+    ];
+  }
+  function fresh(withSample) {
+    return {
+      assignments: withSample ? seed() : [], plans: [], sessions: [], activity: [],
+      theme: 'dark', timer: { mode: 'focus', total: 1500, left: 1500, running: false, endAt: 0 }
+    };
+  }
+  let S = load() || fresh(true);
+  S.assignments = S.assignments || []; S.plans = S.plans || []; S.sessions = S.sessions || [];
+  S.activity = S.activity || []; S.theme = S.theme || 'dark';
+  S.timer = S.timer || fresh(false).timer;
+ 
+  function toast(msg) { const t = el('div', 'toast', msg); $('#toasts').append(t); setTimeout(() => t.remove(), 3000); }
+  function log(text) { S.activity.unshift({ text, at: Date.now() }); S.activity = S.activity.slice(0, 8); }
+  function confirmBox(msg) {
+    return new Promise((resolve) => {
+      const d = $('#cDlg'); $('#cMsg').textContent = msg;
+      d.addEventListener('close', () => resolve(d.returnValue === 'ok'), { once: true });
+      d.returnValue = 'cancel'; d.showModal();
+    });
+  }
+  const isOver = (a) => a.status !== 'Completed' && a.due < today();
+  const sum = (arr) => arr.reduce((n, s) => n + s.minutes, 0);
+ 
+  /* ---------- 3. Rendering (shared) ---------- */
+  function lastSeven() {
+    const out = [];
+    for (let i = 6; i >= 0; i--) {
+      const key = addDays(-i);
+      out.push({
+        label: new Date(key + 'T00:00').toLocaleDateString(undefined, { weekday: 'short' }),
+        value: sum(S.sessions.filter((s) => s.date === key))
+      });
+    }
+    return out;
+  }
+  function bars(box, items) {
+    box.replaceChildren();
+    const max = Math.max(1, ...items.map((i) => i.value));
+    items.forEach((i) => {
+      const c = el('div', 'bcol'); const track = el('div', 'btrack'); const bar = el('div', 'bar');
+      bar.style.height = (i.value / max * 100) + '%';
+      track.append(bar); c.append(el('span', null, i.value + 'm'), track, el('span', null, i.label));
+      box.append(c);
+    });
+  }
+  function hbars(box, items, cls) {
+    box.replaceChildren();
+    const max = Math.max(1, ...items.map((i) => i.value));
+    items.forEach((i) => {
+      const r = el('div', 'hrow'); const t = el('div', 'htrack'); const f = el('div', cls || '');
+      f.style.width = (i.value / max * 100) + '%'; t.append(f);
+      r.append(el('span', null, i.label), t, el('span', null, String(i.value)));
+      box.append(r);
+    });
+  }
+  function weekSummary(w) {
+    const total = w.reduce((n, d) => n + d.value, 0);
+    return total === 0 ? 'No focus time recorded in the last 7 days.' :
+      'Last 7 days: ' + w.map((d) => d.label + ' ' + d.value + 'm').join(', ') + '. Total ' + mins(total) + '.';
+  }
+ 
+  function renderDash() {
+    const A = S.assignments;
+    const done = A.filter((a) => a.status === 'Completed').length;
+    const hour = new Date().getHours();
+    $('#h-dash').textContent = (hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening') + ', Sijan';
+    $('#today').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const mottos = ['Small steps every day beat last-minute panic.', 'Start with the hardest task while your mind is fresh.',
+      'One focused session is better than three distracted hours.', 'Progress, not perfection.'];
+    $('#motto').textContent = mottos[new Date().getDate() % mottos.length];
+    $('#sTotal').textContent = A.length;
+    $('#sPending').textContent = A.length - done;
+    $('#sDone').textContent = done;
+    $('#sOver').textContent = A.filter(isOver).length;
+    $('#sFocus').textContent = mins(sum(S.sessions));
+    const w = lastSeven(); const wt = w.reduce((n, d) => n + d.value, 0);
+    const pct = Math.min(100, Math.round(wt / 300 * 100));
+    $('#weekFill').style.width = pct + '%';
+    $('#weekMeter').setAttribute('aria-valuenow', pct);
+    $('#weekText').textContent = 'Weekly goal: ' + mins(wt) + ' of 5h focus (' + pct + '%)';
+    bars($('#weekChart'), w); $('#weekSummary').textContent = weekSummary(w);
+    const up = A.filter((a) => a.status !== 'Completed').sort((a, b) => a.due.localeCompare(b.due)).slice(0, 4);
+    const ul = $('#upList');
+    if (!up.length) empty(ul, 'No pending deadlines. Add an assignment to get started.');
+    else { ul.replaceChildren(); up.forEach((a) => {
+      const li = el('li', 'item' + (isOver(a) ? ' over' : '')); li.append(el('span', 'ttl', a.title));
+      li.append(el('span', 'muted', (isOver(a) ? 'Overdue - ' : 'Due ') + fmtDate(a.due))); ul.append(li); }); }
+    const al = $('#actList');
+    if (!S.activity.length) empty(al, 'No activity yet. Complete a task or a focus session.');
+    else { al.replaceChildren(); S.activity.forEach((x) => {
+      const li = el('li', 'item'); li.append(el('span', null, x.text),
+        el('span', 'muted', new Date(x.at).toLocaleString())); al.append(li); }); }
+  }
+ 
+  function renderAnalytics() {
+    const A = S.assignments; const done = A.filter((a) => a.status === 'Completed').length;
+    const pct = A.length ? Math.round(done / A.length * 100) : 0;
+    $('#aPct').textContent = pct + '%'; $('#aSess').textContent = S.sessions.length;
+    $('#aTime').textContent = mins(sum(S.sessions));
+    const sample = A.filter((a) => a.sample).length;
+    $('#anMsg').textContent = !A.length && !S.sessions.length ? 'No data yet. Add assignments or finish a focus session.' :
+      (pct >= 70 ? 'Great work! You are ahead of your plan.' : pct >= 30 ? 'Good progress. Keep the momentum going.' : 'Every journey starts somewhere. Pick one task today.') +
+      (sample ? ' (Includes ' + sample + ' sample tasks, not real activity.)' : '');
+    if (!A.length) { $('#pcChart').replaceChildren(el('p', 'empty', 'No assignments yet.')); $('#subChart').replaceChildren(el('p', 'empty', 'No assignments yet.')); }
+    else {
+      hbars($('#pcChart'), [{ label: 'Pending', value: A.length - done }, { label: 'Completed', value: done }], 'ok');
+      const by = {}; A.forEach((a) => { const k = a.subject || 'No subject'; by[k] = (by[k] || 0) + 1; });
+      hbars($('#subChart'), Object.keys(by).map((k) => ({ label: k, value: by[k] })));
+    }
+    $('#pcText').textContent = A.length ? done + ' completed and ' + (A.length - done) + ' pending out of ' + A.length + '.' : '';
+    $('#subText').textContent = A.length ? 'Subjects: ' + Object.keys(A.reduce((o, a) => (o[a.subject || 'No subject'] = 1, o), {})).join(', ') + '.' : '';
+    const w = lastSeven(); bars($('#anChart'), w); $('#anText').textContent = weekSummary(w);
+  }
+ 
+  function renderAll() {
+    renderDash(); renderAssignments(); renderPlans(); renderAnalytics(); drawTimer();
+  }
+ 
+  /* ---------- 4. Assignments ---------- */
+  function renderAssignments() {
+    $('#sampleBanner').hidden = !S.assignments.some((a) => a.sample);
+    const q = $('#q').value.trim().toLowerCase(), fs = $('#fStatus').value, fp = $('#fPri').value, so = $('#fSort').value;
+    let list = S.assignments.filter((a) =>
+      (!q || a.title.toLowerCase().includes(q) || (a.subject || '').toLowerCase().includes(q)) &&
+      (fs === 'all' || (fs === 'Overdue' ? isOver(a) : a.status === fs)) &&
+      (fp === 'all' || a.priority === fp));
+    list.sort((a, b) => so === 'asc' ? a.due.localeCompare(b.due) : b.due.localeCompare(a.due));
+    const box = $('#asList');
+    if (!list.length) { empty(box, S.assignments.length ? 'No assignments match your filters.' : 'No assignments yet. Click "Add assignment" to create one.'); return; }
+    box.replaceChildren();
+    list.forEach((a) => {
+      const li = el('li', 'item' + (a.status === 'Completed' ? ' done' : isOver(a) ? ' over' : ''));
+      li.append(el('span', 'ttl', a.title));
+      const b = el('div', 'badges');
+      b.append(el('span', 'badge', a.subject || 'No subject'), el('span', 'badge ' + a.priority, a.priority),
+        el('span', 'badge', a.status), el('span', 'badge', 'Due ' + fmtDate(a.due)));
+      if (isOver(a)) b.append(el('span', 'badge od', 'Overdue'));
+      if (a.sample) b.append(el('span', 'badge sm', 'Sample'));
+      li.append(b);
+      if (a.description) li.append(el('span', 'muted', a.description));
+      const r = el('div', 'row');
+      r.append(btn(a.status === 'Completed' ? 'Reopen' : 'Mark complete', 'toggle', a.id), btn('Edit', 'edit', a.id), btn('Delete', 'del', a.id));
+      li.append(r); box.append(li);
+    });
+  }
+  function openAssignment(a) {
+    $('#aDlgT').textContent = a ? 'Edit assignment' : 'Add assignment';
+    $('#aId').value = a ? a.id : ''; $('#aTitle').value = a ? a.title : '';
+    $('#aSub').value = a ? a.subject : ''; $('#aDesc').value = a ? a.description : '';
+    $('#aDue').value = a ? a.due : addDays(3); $('#aPri').value = a ? a.priority : 'Medium';
+    $('#aErr').textContent = ''; $('#aDlg').showModal(); $('#aTitle').focus();
+  }
+  function submitAssignment(e) {
+    e.preventDefault();
+    const id = $('#aId').value, title = $('#aTitle').value.trim(), due = $('#aDue').value;
+    let err = '';
+    if (!title) err = 'Please enter an assignment title.';
+    else if (!due || !validDate(due)) err = 'Please choose a valid due date.';
+    else if (!id && due < today()) err = 'The due date cannot be in the past for a new assignment.';
+    if (err) { $('#aErr').textContent = err; return; }
+    const data = { title, subject: $('#aSub').value.trim(), description: $('#aDesc').value.trim(), due, priority: $('#aPri').value };
+    if (id) { Object.assign(S.assignments.find((a) => a.id === id), data); log('Edited "' + title + '"'); toast('Assignment updated'); }
+    else { S.assignments.push(Object.assign({ id: uid(), status: 'Pending', created: today(), sample: false }, data)); log('Added "' + title + '"'); toast('Assignment added'); }
+    save(); $('#aDlg').close(); renderAll();
+  }
+  async function assignmentAction(e) {
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const a = S.assignments.find((x) => x.id === b.dataset.id); if (!a) return;
+    if (b.dataset.act === 'edit') openAssignment(a);
+    else if (b.dataset.act === 'toggle') {
+      a.status = a.status === 'Completed' ? 'Pending' : 'Completed';
+      log((a.status === 'Completed' ? 'Completed "' : 'Reopened "') + a.title + '"');
+      toast(a.status === 'Completed' ? 'Marked as completed' : 'Assignment reopened'); save(); renderAll();
+    } else if (b.dataset.act === 'del') {
+      if (await confirmBox('Delete "' + a.title + '"? This cannot be undone.')) {
+        S.assignments = S.assignments.filter((x) => x.id !== a.id); log('Deleted "' + a.title + '"');
+        toast('Assignment deleted'); save(); renderAll();
+      }
+    }
+  }
+ 
+  /* ---------- 5. Study planner ---------- */
+  function renderPlans() {
+    const t = today();
+    const sorted = S.plans.slice().sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    const fill = (box, arr, msg) => {
+      if (!arr.length) { empty(box, msg); return; }
+      box.replaceChildren();
+      arr.forEach((p) => {
+        const li = el('li', 'item' + (p.done ? ' done' : ''));
+        li.append(el('span', 'ttl', p.time + ' (' + p.duration + ' min) - ' + p.subject));
+        li.append(el('span', 'muted', p.goal + ' | ' + fmtDate(p.date)));
+        const r = el('div', 'row');
+        r.append(btn(p.done ? 'Undo' : 'Mark done', 'pdone', p.id), btn('Edit', 'pedit', p.id), btn('Delete', 'pdel', p.id));
+        li.append(r); box.append(li);
+      });
+    };
+    fill($('#plToday'), sorted.filter((p) => p.date === t), 'Nothing planned for today. Add a study plan.');
+    fill($('#plOther'), sorted.filter((p) => p.date !== t), 'No other plans yet.');
+  }
+  function resetPlanForm() {
+    $('#plForm').reset(); $('#plId').value = ''; $('#plDate').value = today(); $('#plTitle').textContent = 'Add study plan';
+    $('#plSave').textContent = 'Add plan'; $('#plCancel').hidden = true; $('#plErr').textContent = '';
+  }
+  function submitPlan(e) {
+    e.preventDefault();
+    const id = $('#plId').value, date = $('#plDate').value, time = $('#plTime').value;
+    const dur = parseInt($('#plDur').value, 10), goal = $('#plGoal').value.trim();
+    let err = '';
+    if (!date || !validDate(date)) err = 'Please choose a valid date.';
+    else if (!time) err = 'Please choose a start time.';
+    else if (!(dur >= 5 && dur <= 480)) err = 'Duration must be between 5 and 480 minutes.';
+    else if (!goal) err = 'Please write a short study goal.';
+    if (err) { $('#plErr').textContent = err; return; }
+    const data = { subject: $('#plSub').value, date, time, duration: dur, goal };
+    if (id) { Object.assign(S.plans.find((p) => p.id === id), data); toast('Plan updated'); }
+    else { S.plans.push(Object.assign({ id: uid(), done: false }, data)); log('Planned ' + data.subject + ' session'); toast('Plan added'); }
+    save(); resetPlanForm(); renderAll();
+  }
+  async function planAction(e) {
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const p = S.plans.find((x) => x.id === b.dataset.id); if (!p) return;
+    if (b.dataset.act === 'pdone') { p.done = !p.done; if (p.done) log('Finished plan: ' + p.subject); toast(p.done ? 'Session marked done' : 'Marked as not done'); save(); renderAll(); }
+    else if (b.dataset.act === 'pedit') {
+      $('#plId').value = p.id; $('#plSub').value = p.subject; $('#plDate').value = p.date; $('#plTime').value = p.time;
+      $('#plDur').value = p.duration; $('#plGoal').value = p.goal; $('#plTitle').textContent = 'Edit study plan';
+      $('#plSave').textContent = 'Save plan'; $('#plCancel').hidden = false; $('#plGoal').focus();
+    } else if (b.dataset.act === 'pdel') {
+      if (await confirmBox('Delete this study plan?')) { S.plans = S.plans.filter((x) => x.id !== p.id); toast('Plan deleted'); save(); renderAll(); }
+    }
+  }
+ 
+  /* ---------- 6. Pomodoro timer (timestamp based) ---------- */
+  const DUR = { focus: 25, short: 5, long: 15 };
+  const NAMES = { focus: 'Focus', short: 'Short break', long: 'Long break' };
+  let iv = null; // single interval handle prevents duplicates
+ 
+  function drawTimer() {
+    const t = S.timer, left = Math.max(0, t.left);
+    $('#time').textContent = pad(Math.floor(left / 60)) + ':' + pad(left % 60);
+    $('#modeName').textContent = NAMES[t.mode];
+    $('#ringP').style.strokeDashoffset = 565.49 * (1 - left / t.total);
+    const paused = !t.running && left > 0 && left < t.total;
+    $('#tStart').hidden = t.running || paused; $('#tResume').hidden = !paused; $('#tPause').hidden = !t.running;
+    $$('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === t.mode)));
+    document.title = t.running ? $('#time').textContent + ' - CampusFlow' : 'CampusFlow | Smart Student Productivity Hub';
+    $('#focusStats').textContent = 'Completed sessions: ' + S.sessions.length + ' | Total focus time: ' + mins(sum(S.sessions));
+  }
+  function stopTick() { clearInterval(iv); iv = null; }
+  function runTick() { stopTick(); iv = setInterval(tick, 250); tick(); }
+  function tick() {
+    const t = S.timer; if (!t.running) return;
+    const left = Math.ceil((t.endAt - Date.now()) / 1000);
+    if (left <= 0) { finishTimer(); return; }
+    t.left = left; drawTimer();
+  }
+  function startTimer() {
+    const t = S.timer; if (t.running) return;
+    if (t.left <= 0) t.left = t.total;
+    t.endAt = Date.now() + t.left * 1000; t.running = true; save(); runTick();
+  }
+  function pauseTimer() {
+    const t = S.timer; if (!t.running) return;
+    t.left = Math.max(1, Math.ceil((t.endAt - Date.now()) / 1000)); t.running = false; stopTick(); save(); drawTimer();
+  }
+  function resetTimer() { stopTick(); S.timer.running = false; S.timer.left = S.timer.total; save(); drawTimer(); }
+  function setMode(m) { stopTick(); S.timer = { mode: m, total: DUR[m] * 60, left: DUR[m] * 60, running: false, endAt: 0 }; save(); drawTimer(); }
+  function finishTimer() {
+    stopTick(); const t = S.timer; t.running = false; t.left = 0;
+    if (t.mode === 'focus') {
+      S.sessions.push({ date: today(), minutes: DUR.focus }); log('Completed a ' + DUR.focus + '-minute focus session');
+      toast('Focus session complete! Time for a break.');
+    } else toast('Break finished. Ready to focus?');
+    save(); renderAll();
+  }
+ 
+  /* ---------- 7. Settings and navigation ---------- */
+  function applyTheme() { document.documentElement.dataset.theme = S.theme; }
+  function toggleTheme() { S.theme = S.theme === 'dark' ? 'light' : 'dark'; applyTheme(); save(); }
+  function show(v) {
+    $$('.view').forEach((x) => x.classList.toggle('active', x.id === 'view-' + v));
+    $$('#nav button').forEach((b) => {
+      const on = b.dataset.view === v; b.classList.toggle('active', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    closeMenu(); renderAll(); window.scrollTo(0, 0);
+  }
+  function closeMenu() { $('#app').classList.remove('menu-open'); $('#menuBtn').setAttribute('aria-expanded', 'false'); }
+ 
+  /* ---------- 8. Init ---------- */
+  function init() {
+    applyTheme();
+    $('#nav').addEventListener('click', (e) => { const b = e.target.closest('button[data-view]'); if (b) show(b.dataset.view); });
+    document.addEventListener('click', (e) => {
+      const g = e.target.closest('[data-go]'); if (g) show(g.dataset.go);
+      if (e.target.closest('[data-quick]')) openAssignment(null);
+    });
+    $('#menuBtn').addEventListener('click', () => { const o = $('#app').classList.toggle('menu-open'); $('#menuBtn').setAttribute('aria-expanded', String(o)); });
+    $('#scrim').addEventListener('click', closeMenu);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    $('#collapseBtn').addEventListener('click', () => $('#app').classList.toggle('collapsed'));
+    $('#themeBtn').addEventListener('click', toggleTheme); $('#themeBtn2').addEventListener('click', toggleTheme);
+ 
+    $('#aForm').addEventListener('submit', submitAssignment);
+    $('#aCancel').addEventListener('click', () => $('#aDlg').close());
+    $('#asList').addEventListener('click', assignmentAction);
+    ['q', 'fStatus', 'fPri', 'fSort'].forEach((id) => $('#' + id).addEventListener('input', renderAssignments));
+    $('#rmSample').addEventListener('click', removeSample);
+    $('#clrDemo').addEventListener('click', removeSample);
+ 
+    $('#plForm').addEventListener('submit', submitPlan);
+    $('#plCancel').addEventListener('click', resetPlanForm);
+    $('#plToday').addEventListener('click', planAction); $('#plOther').addEventListener('click', planAction);
+    resetPlanForm();
+ 
+    $('#tStart').addEventListener('click', startTimer); $('#tResume').addEventListener('click', startTimer);
+    $('#tPause').addEventListener('click', pauseTimer); $('#tReset').addEventListener('click', resetTimer);
+    $$('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+ 
+    $('#resetAll').addEventListener('click', async () => {
+      if (await confirmBox('Reset ALL CampusFlow data (assignments, plans, sessions)? This cannot be undone.')) {
+        stopTick(); const theme = S.theme; S = fresh(false); S.theme = theme; save(); renderAll(); toast('All data reset');
+      }
+    });
+ 
+    renderAll();
+    if (S.timer.running) runTick(); // restores a running timer; a paused one stays paused
+  }
+  function removeSample() {
+    const n = S.assignments.filter((a) => a.sample).length;
+    if (!n) { toast('No sample tasks to remove'); return; }
+    S.assignments = S.assignments.filter((a) => !a.sample); save(); renderAll(); toast('Sample tasks removed');
+  }
+ 
+  init();
+})();
+ 
+</script>
+</body>
+</html>
+ 
+Claude finished the response
